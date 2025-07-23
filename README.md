@@ -1,12 +1,10 @@
-# Ride Comfort Analysis Tool
+# Ride Comfort Analysis
 
-This project is a modular Python reimplementation of a MATLAB-based ride comfort analysis, using EN 12299 and ISO 2631 standards. It is organized into functional components.
+This project provides a modular Python implementation for computing and visualizing ride comfort metrics from vibration data. It should mirror the logic and structure of the MATLAB script. Note that this code is untested and is not meant to be executed. If you put data RAVE and non-RAVE data, it can be tested.
 
 ---
 
 ## Setup
-
-Note that this code is untested and is not meant to be executed. If you put data RAVE and non-RAVE data, it might work.
 
 Clone repository
 
@@ -20,6 +18,12 @@ Create conda environment
 conda create -n comfort python=3.11.13
 ```
 
+After the conda environment is created (you will be prompted to type Y to continue installations), run:
+
+```
+conda activate comfort
+```
+
 Navigate to root folder of project, where `requirements.txt` lives and run:
 
 ```
@@ -27,15 +31,6 @@ pip install -r requirements.txt
 ```
 
 ## Overview
-
-- Inputs: CSV files from LXTHIRD, including 5s-averaged "RAVE" outputs and corresponding 1s full-resolution signals
-- Outputs: Comfort metrics (N_M_V, N_V_D), ISO metrics, VDV plots, and comparison visualizations
-- Structure: Modular analysis and plotting functions grouped in `analysis/`
-
----
-# Ride Comfort Analysis
-
-This project provides a modular Python implementation for computing and visualizing ride comfort metrics from vibration data. It mirrors the logic and structure of a legacy MATLAB script, but is refactored for clarity, modularity, and ease of reuse.
 
 ---
 
@@ -61,10 +56,7 @@ This project provides a modular Python implementation for computing and visualiz
    - Maps metric values to comfort categories via threshold bands
 
 5. **Visualizes**
-   - Scatter plot of comfort metrics against defined thresholds
-   - Line plots of VDV and RMS acceleration over time
-   - Comparison of comfort ratio thresholds
-   - Overlay of composite acceleration from both methods
+   - 5 different plots corresponding to the calculated metrics, their ratios and overall comparisons
 
 ---
 
@@ -117,7 +109,7 @@ This project provides a modular Python implementation for computing and visualiz
 
 ## Notes
 
-- Ensure your CSV data files are correctly placed under the `data/` directory.
+- CSV data files must be in the `data/` directory.
 - Sampling assumptions:
   - Raw files: 1s interval
   - RAVE files: 5s rolling average, sampled every 1s
@@ -127,11 +119,10 @@ This project provides a modular Python implementation for computing and visualiz
 
 ## Outputs
 
-The script produces:
+The script (in theory) produces:
 - Console prints of calculated metrics
 - A series of Matplotlib figures showing:
   - Comfort metric thresholds
   - Time series of acceleration and composite signals
   - VDV and ratio plots
-
 ---

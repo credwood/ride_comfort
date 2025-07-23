@@ -1,9 +1,5 @@
 
 def categorize(value, categories):
-    """
-    Return the category label for a scalar value using a list of ((lo, hi), label) pairs.
-    """
-   
     matches = [label for (lo, hi), label in categories if lo < value < hi]
 
     if len(matches) == 1:

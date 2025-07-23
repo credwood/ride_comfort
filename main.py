@@ -62,7 +62,7 @@ t_all = pd.to_timedelta(x_raw['Number'], unit='s')
 # Downsampled time vector to match 5s interval RAVE slices
 t_5s = t_all[4::5]
 
-# EN:12299 5s signals plot
+# 5s signals plot
 plot_comfort_timeseries(t_5s, Cx, Cy, Cz)
 
 #### For av calculation, note that I'm not implementing the kb control flow ###

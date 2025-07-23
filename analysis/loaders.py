@@ -11,7 +11,7 @@ def load_rave_and_nonrave(x_file, y_file, z_file):
     y_rave = load_csv(y_file)
     z_rave = load_csv(z_file)
 
-    # Load running averages
+    # Load 5s running averages
     x_raw = load_csv(x_file.replace('-RAVE', ''))
     y_raw = load_csv(y_file.replace('-RAVE', ''))
     z_raw = load_csv(z_file.replace('-RAVE', ''))
