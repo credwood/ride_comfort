@@ -34,7 +34,7 @@ pip install -r requirements.txt
 
 ---
 
-## What `main.py` Does
+## What `main.py` and `calculations.ipynb` Do
 
 1. **Loads Data**
    - Loads three-axis (X, Y, Z) datasets in two forms:
