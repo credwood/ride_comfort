@@ -2,19 +2,23 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def plot_comfort_thresholds(nmv, nvd, categories):
+    import matplotlib.pyplot as plt
+
     plt.figure()
     plt.scatter(1, nmv, label='N_M_V')
     plt.scatter(1, nvd, label='N_V_D')
     plt.xlim(0, 2)
     plt.ylim(0, 5)
-    for lo, hi in [c[0] for c in categories]:
+
+    for (lo, hi), label in categories:
         plt.axhline(lo, linestyle='-', color='gray', linewidth=0.5)
-    for _, label in categories:
-        plt.text(1.5, (categories[categories.index(((lo, hi), label))][0][0]), label)
+        plt.text(1.5, lo + 0.1, label, fontsize=8, verticalalignment='bottom')
+
     plt.legend(loc='lower left')
     plt.title('Mean Comfort Index')
     plt.xticks([])
     plt.gca().set_aspect(2 / 3)
+    plt.tight_layout()
     plt.show()
 
 def plot_vdv_over_time(t, vdv_x, vdv_y, vdv_z):
