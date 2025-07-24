@@ -2,8 +2,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def plot_comfort_thresholds(nmv, nvd, categories):
-    import matplotlib.pyplot as plt
-
     plt.figure()
     plt.scatter(1, nmv, label='N_M_V')
     plt.scatter(1, nvd, label='N_V_D')
