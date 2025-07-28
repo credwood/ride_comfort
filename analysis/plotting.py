@@ -15,7 +15,7 @@ def plot_comfort_thresholds(nmv, nvd, categories):
     plt.legend(loc='lower left')
     plt.title('Mean Comfort Index')
     plt.xticks([])
-    plt.gca().set_aspect(2 / 3)
+    plt.gca()
     plt.tight_layout()
     plt.show()
 
@@ -26,8 +26,9 @@ def plot_vdv_over_time(t, vdv_x, vdv_y, vdv_z):
     plt.plot(t, vdv_z, label='VDV_Z')
     plt.ylabel('Vibration Dose Value (m/s^1.75)')
     plt.title('Vibration Dose Over Time (1s interval)')
-    plt.legend(loc='east')
-    plt.gca().set_aspect(3 / 2)
+    plt.legend(loc='lower right')
+    plt.gca()
+    plt.tight_layout()
     plt.show()
 
 def plot_ratio_comparison(t, ratios, labels):
@@ -39,43 +40,104 @@ def plot_ratio_comparison(t, ratios, labels):
     plt.ylabel('VDV / (a_wT^1/4)')
     plt.title('VDV method compared to basic method')
     plt.legend(loc='lower right')
+    plt.tight_layout()
     plt.show()
 
-def plot_comfort_timeseries(t_5s, cx, cy, cz):
+
+def plot_comfort_timeseries(t_5s_minutes, Cx, Cy, Cz):
     plt.figure()
-    plt.scatter(t_5s, cx, label='C_c_x', marker='o')
-    plt.scatter(t_5s, cy, label='C_c_y', marker='s')
-    plt.scatter(t_5s, cz, label='C_c_z', marker='^')
 
-    for threshold, label in zip([0.0, 0.2, 0.3, 0.4],
-                                 ['Very comfortable', 'Comfortable', 'Medium', 'Less comfortable']):
-        plt.axhline(threshold, linestyle='-', label=label, linewidth=0.5)
+    # Plot signals
+    plt.plot(t_5s_minutes, Cx, marker='o', label='Cx (X)', linestyle='-')
+    plt.plot(t_5s_minutes, Cy, marker='s', label='Cy (Y)', linestyle='-', color='orange')
+    plt.plot(t_5s_minutes, Cz, marker='^', label='Cz (Z)', linestyle='-', color='green')
 
-    plt.ylim(0, 0.5)
-    plt.ylabel('5s weighted rms acceleration (m/s²)')
-    plt.title('EN:12299 Ride Comfort (5s Interval)')
-    plt.legend(loc='east')
-    plt.gca().set_aspect(3 / 2)
+    # Comfort bands
+    categories = [
+        ((0, 1.5), 'Very Comfortable'),
+        ((1.5, 2.5), 'Comfortable'),
+        ((2.5, 3.5), 'Medium'),
+        ((3.5, 4.5), 'Uncomfortable'),
+        ((4.5, 6.0), 'Very Uncomfortable')
+    ]
+
+    for (lo, hi), label in categories:
+        plt.axhspan(lo, hi, color='gray', alpha=0.1)
+        y_mid = (lo + hi) / 2
+        x_mid = t_5s_minutes.iloc[len(t_5s_minutes) // 2]
+        plt.text(x_mid, y_mid, label, ha='center', va='center', fontsize=8, color='black', alpha=0.8)
+
+    # Formatting
+    plt.ylabel('5s Weighted RMS Acceleration (m/s²)')
+    plt.xlabel('Time (minutes)')
+    plt.title('Ride Comfort Over Time (5s Interval)')
+
+    # Limit xticks for readability
+    if len(t_5s_minutes) > 15:
+        step = len(t_5s_minutes) // 10
+        plt.xticks(t_5s_minutes[::step].round(1))
+
+    plt.legend(loc='upper left')
+    plt.gca()
+    plt.tight_layout()
     plt.show()
+
+
+def plot_compare_all_metrics(t_5s_minutes, X_ISO_5s, Y_ISO_5s, Z_ISO_5s, C_cx, C_cy, C_cz):
+    """
+    Compare ISO and EN comfort metrics at 5s intervals.
+    
+    Parameters:
+        t_5s_minutes: Time vector in minutes (downsampled to 5s intervals)
+        X_ISO_5s, Y_ISO_5s, Z_ISO_5s: ISO-weighted rms values downsampled to 5s
+        C_cx, C_cy, C_cz: EN comfort components downsampled to 5s
+    """
+    # Optional: composite EN metric, not plotted but could be
+    # C_c = np.sqrt(C_cx**2 + C_cy**2 + C_cz**2)
+
+    plt.figure(figsize=(10, 6))
+    
+    # ISO metrics: large filled squares
+    plt.scatter(t_5s_minutes, X_ISO_5s, s=125, marker='s', label='ISO:2631 a_W_d_x')
+    plt.scatter(t_5s_minutes, Y_ISO_5s, s=125, marker='s', label='ISO:2631 a_W_d_y')
+    plt.scatter(t_5s_minutes, Z_ISO_5s, s=125, marker='s', label='ISO:2631 a_W_k_z')
+
+    # EN metrics: filled circles with white edge
+    plt.scatter(t_5s_minutes, C_cx, s=40, label='EN:12299 C_c_x', edgecolors='white')
+    plt.scatter(t_5s_minutes, C_cy, s=40, label='EN:12299 C_c_y', edgecolors='white')
+    plt.scatter(t_5s_minutes, C_cz, s=40, label='EN:12299 C_c_z', edgecolors='white')
+
+    plt.ylabel('Weighted RMS acceleration (m/s²)')
+    plt.xlabel('Time (minutes)')
+    plt.title('Compare Ride Comfort Metrics (5s interval)')
+    plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    plt.xticks(np.round(np.linspace(t_5s_minutes.min(), t_5s_minutes.max(), 10), 1))
+    plt.gca()
+    plt.tight_layout()
+    plt.show()
+
 
 def plot_iso_timeseries(t, x_iso, y_iso, z_iso, a_v, a_v_5s=None, t_5s=None):
-    plt.figure()
-    plt.plot(t, x_iso, label='X ISO_WD')
-    plt.plot(t, y_iso, label='Y ISO_WD')
-    plt.plot(t, z_iso, label='Z ISO_WB')
-    plt.plot(t, a_v, linestyle=':', color='black', label='ISO 3D Composite')
+    # Ensure t is float
+    if hasattr(t, "dt"):
+        t = t.dt.total_seconds() / 60
 
-    if a_v_5s is not None and t_5s is not None:
-        plt.scatter(t_5s, a_v_5s, label='5s Composite', color='red', s=20)
+    plt.figure()
+    plt.plot(t, x_iso, label='a_Wd_x')
+    plt.plot(t, y_iso, label='a_Wd_y')
+    plt.plot(t, z_iso, label='a_Wk_z')
+    plt.plot(t, a_v, linestyle=':', color='black', label='ISO 3D Composite')
 
     plt.ylabel('1s weighted rms acceleration (m/s²)')
     plt.title('ISO Ride Comfort (1s Interval)')
 
-    # Optional: downsample ticks for readability
-    if len(t) > 15:
-        step = len(t) // 15
-        plt.xticks(t[::step])
+    # Downsample x-ticks for clarity
+    num_ticks = 5  # adjust as needed
+    step = max(1, len(t) // num_ticks)
+    tick_indices = np.arange(0, len(t), step)
+    plt.xticks(t[tick_indices])
 
-    plt.legend(loc='east')
-    plt.gca().set_aspect(3 / 2)
+    plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    plt.gca()
+    plt.tight_layout()
     plt.show()
