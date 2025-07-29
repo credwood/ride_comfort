@@ -1,0 +1,242 @@
+{
+  "Siemens_T2_AW0_car_Ride_Quality_north_5-24-2020": {
+    "metadata": {
+      "date": "2020-05-24",
+      "no_cars": 2,
+      "car_type": "AW0"
+    },
+    "TEAC": {
+      "channels": [1, 2, 3, 4, 5, 6],
+      "triax": ["3X", "3Z", "3rss", "6X", "6Z", "6rss"],
+      "sensor_location": [
+        "floor between trucks",
+        "floor over center truck"
+      ],
+      "preamp_nums": [34, 67, 12, 39, 98, 12],
+      "accel_serial_nums": ["A34", "A67", "A12", "A39", "A98", "A12"],
+      "runs": {
+        "000001": {
+          "time": 12043.3989,
+          "speed": 25,
+          "track_type": "metal",
+          "location": "east shore",
+          "direction": "north",
+          "dat_file": "path/or/obj/dummy.dat",
+          "header_file": "path/or/obj/dummy.hdr",
+          "metrics": {
+            "ride_comfort_seated": 0.85,
+            "ride_comfort_standing": 0.72
+          }
+        },
+        "000002": {
+          "time": 12043.5898,
+          "speed": 30,
+          "track_type": "metal",
+          "location": "east shore",
+          "direction": "north",
+          "dat_file": "path/or/obj/dummy2.dat",
+          "header_file": "path/or/obj/dummy2.hdr",
+          "metrics": {
+            "ride_comfort_seated": 0.88,
+            "ride_comfort_standing": 0.75
+          }
+        }
+      }
+    },
+    "rion_1": {
+      "channels": [1, 2, 3],
+      "triax": ["1X", "1Z", "1rss"],
+      "sensor_location": "seat back",
+      "runs": {
+        "2020-05-24_011706": {
+          "0001": {
+            "split_runs": {
+              "1": {
+                "time": 12043.3989,
+                "speed": 25,
+                "track_type": "metal",
+                "location": "east shore",
+                "direction": "north",
+                "dat_file": "path/or/obj/dummy.dat",
+                "header_file": "path/or/obj/dummy.hdr",
+                "metrics": {
+                  "ride_comfort_seated": 0.85,
+                  "ride_comfort_standing": 0.72
+                }
+              },
+              "2": {
+                "time": 12043.5898,
+                "speed": 30,
+                "track_type": "metal",
+                "location": "east shore",
+                "direction": "north",
+                "dat_file": "path/or/obj/dummy2.dat",
+                "header_file": "path/or/obj/dummy2.hdr",
+                "metrics": {
+                  "ride_comfort_seated": 0.88,
+                  "ride_comfort_standing": 0.75
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "rion_2": {
+      "channels": [1, 2, 3],
+      "triax": ["2X", "2Z", "2rss"],
+      "sensor_location": "seat bottom",
+      "runs": {
+        "2020-05-24_011710": {
+          "0001": {
+            "split_runs": {
+              "1": {
+                "timestamp": 12043.3989,
+                "speed": 25,
+                "location": "east shore",
+                "direction": "north",
+                "track_type": "metal",
+                "dat_file": "path/or/obj/dummy.dat",
+                "header_file": "path/or/obj/dummy.hdr",
+                "metrics": {
+                  "ride_comfort_seated": 0.82,
+                  "ride_comfort_standing": 0.70
+                }
+              },
+              "2": {
+                "timestamp": 12043.5898,
+                "speed": 30,
+                "location": "east shore",
+                "direction": "north",
+                "track_type": "metal",
+                "dat_file": "path/or/obj/dummy2.dat",
+                "header_file": "path/or/obj/dummy2.hdr",
+                "metrics": {
+                  "ride_comfort_seated": 0.86,
+                  "ride_comfort_standing": 0.74
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "rion_3": {
+      "channels": [1, 2, 3],
+      "triax": ["5X", "5Z", "5rss"],
+      "sensor_location": "window frame",
+      "runs": {
+        "2020-05-24_011720": {
+          "0001": {
+            "split_runs": {
+              "1": {
+                "timestamp": 12043.7001,
+                "speed": 25,
+                "location": "east shore",
+                "direction": "north",
+                "track_type": "metal",
+                "dat_file": "path/or/obj/dummy3.dat",
+                "header_file": "path/or/obj/dummy3.hdr",
+                "metrics": {
+                  "ride_comfort_seated": 0.83,
+                  "ride_comfort_standing": 0.71
+                }
+              },
+              "2": {
+                "timestamp": 12043.8902,
+                "speed": 30,
+                "location": "east shore",
+                "direction": "north",
+                "track_type": "metal",
+                "dat_file": "path/or/obj/dummy4.dat",
+                "header_file": "path/or/obj/dummy4.hdr",
+                "metrics": {
+                  "ride_comfort_seated": 0.87,
+                  "ride_comfort_standing": 0.76
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "rion_4": {
+      "channels": [1, 2, 3],
+      "triax": ["4X", "4Z", "4rss"],
+      "sensor_location": "wall panel",
+      "runs": {
+        "2020-05-24_011730": {
+          "0001": {
+            "split_runs": {
+              "1": {
+                "timestamp": 12044.0001,
+                "speed": 25,
+                "location": "east shore",
+                "direction": "north",
+                "track_type": "metal",
+                "dat_file": "path/or/obj/dummy5.dat",
+                "header_file": "path/or/obj/dummy5.hdr",
+                "metrics": {
+                  "ride_comfort_seated": 0.84,
+                  "ride_comfort_standing": 0.73
+                }
+              },
+              "2": {
+                "timestamp": 12044.1402,
+                "speed": 30,
+                "location": "east shore",
+                "direction": "north",
+                "track_type": "metal",
+                "dat_file": "path/or/obj/dummy6.dat",
+                "header_file": "path/or/obj/dummy6.hdr",
+                "metrics": {
+                  "ride_comfort_seated": 0.89,
+                  "ride_comfort_standing": 0.77
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "rion_5": {
+      "channels": [1, 2],
+      "accel": [1, 2],
+      "sensor_location": "cabin ceiling",
+      "runs": {
+        "2020-05-24_011740": {
+          "0001": {
+            "split_runs": {
+              "1": {
+                "timestamp": 12044.2501,
+                "speed": 29,
+                "location": "east shore",
+                "direction": "north",
+                "track_type": "metal",
+                "dat_file": "path/or/obj/dummy7.dat",
+                "header_file": "path/or/obj/dummy7.hdr",
+                "metrics": {
+                  "ride_comfort_seated": 0.90,
+                  "ride_comfort_standing": 0.78
+                }
+              },
+              "2": {
+                "timestamp": 12044.3988,
+                "speed": 34,
+                "location": "east shore",
+                "direction": "north",
+                "track_type": "metal",
+                "dat_file": "path/or/obj/dummy8.dat",
+                "header_file": "path/or/obj/dummy8.hdr",
+                "metrics": {
+                  "ride_comfort_seated": 0.91,
+                  "ride_comfort_standing": 0.79
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
