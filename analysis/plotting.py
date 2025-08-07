@@ -52,16 +52,16 @@ def plot_comfort_timeseries(t_5s_minutes, Cx, Cy, Cz):
     plt.plot(t_5s_minutes, Cy, marker='s', label='Cy (Y)', linestyle='-', color='orange')
     plt.plot(t_5s_minutes, Cz, marker='^', label='Cz (Z)', linestyle='-', color='green')
 
-    # Comfort bands
-    categories = [
-        ((0, 1.5), 'Very Comfortable'),
-        ((1.5, 2.5), 'Comfortable'),
-        ((2.5, 3.5), 'Medium'),
-        ((3.5, 4.5), 'Uncomfortable'),
-        ((4.5, 6.0), 'Very Uncomfortable')
-    ]
+    # Comfort bands - these are already defined in the .ipynb
 
-    for (lo, hi), label in categories:
+    catsCont = [
+    ((0,0.2), 'Very Comfortable'),
+    ((0.2,0.3), 'Comfortable'),
+    ((0.3,0.4), 'Medium'),
+    ((0.4,5), 'Less Comfortable')
+]
+
+    for (lo, hi), label in catsCont:
         plt.axhspan(lo, hi, color='gray', alpha=0.1)
         y_mid = (lo + hi) / 2
         x_mid = t_5s_minutes.iloc[len(t_5s_minutes) // 2]
