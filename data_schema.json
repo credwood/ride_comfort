@@ -1,242 +1,528 @@
 {
-  "Siemens_T2_AW0_car_Ride_Quality_north_5-24-2020": {
+  "5_24_2020": {
     "metadata": {
       "date": "2020-05-24",
-      "no_cars": 2,
-      "car_type": "AW0"
+      "num_cars": 2,
+      "load": "AW3"
     },
-    "TEAC": {
-      "channels": [1, 2, 3, 4, 5, 6],
-      "triax": ["3X", "3Z", "3rss", "6X", "6Z", "6rss"],
-      "sensor_location": [
-        "floor between trucks",
-        "floor over center truck"
-      ],
-      "preamp_nums": [34, 67, 12, 39, 98, 12],
-      "accel_serial_nums": ["A34", "A67", "A12", "A39", "A98", "A12"],
       "runs": {
-        "000001": {
-          "time": 12043.3989,
+        "001": {
+          "time": "1:18",
           "speed": 25,
-          "track_type": "metal",
-          "location": "east shore",
-          "direction": "north",
-          "dat_file": "path/or/obj/dummy.dat",
-          "header_file": "path/or/obj/dummy.hdr",
-          "metrics": {
-            "ride_comfort_seated": 0.85,
-            "ride_comfort_standing": 0.72
-          }
+          "track": "NB",
+          "track_type": "Tun, Emb",
+          "location": "Pioneer Sq.",
+          "direction": "NB",
+          "files": []
+
         },
-        "000002": {
-          "time": 12043.5898,
-          "speed": 30,
-          "track_type": "metal",
-          "location": "east shore",
-          "direction": "north",
-          "dat_file": "path/or/obj/dummy2.dat",
-          "header_file": "path/or/obj/dummy2.hdr",
-          "metrics": {
-            "ride_comfort_seated": 0.88,
-            "ride_comfort_standing": 0.75
-          }
+        "002": {
+          "time": "1:19",
+          "speed": 25,
+          "track": "NB",
+          "track_type": "Tun, Emb",
+          "location": "Pioneer Sq.",
+          "direction": "NB",
+          "files": []
+
+        },
+        "003": {
+          "time": "1:25",
+          "speed": 55,
+          "track": "NB",
+          "track_type": "Tun, Emb",
+          "location": "Pioneer Sq.",
+          "direction": "NB",
+          "files": []
+
+        },
+        "004": {
+          "time": "1:27",
+          "speed": 40,
+          "track": "NB",
+          "track_type": "Tun, Emb",
+          "location": "Pioneer Sq.",
+          "direction": "NB",
+          "files": []
+
+        },
+        "005": {
+          "time": "1:28",
+          "speed": 25,
+          "track": "NB",
+          "track_type": "Tun, DF",
+          "location": "Pioneer Sq.",
+          "direction": "NB",
+          "files": []
+
+        },
+        "006": {
+          "time": "1:49",
+          "speed": 55,
+          "track": "SB",
+          "track_type": "Tun, DF",
+          "location": "UW",
+          "direction": "SB",
+          "files": []
+
+        },
+        "007": {
+          "time": "1:51",
+          "speed": 40,
+          "track": "SB",
+          "track_type": "Tun, DF",
+          "location": "UW",
+          "direction": "SB",
+          "files": []
+
+        },
+        "008": {
+          "time": "1:53",
+          "speed": 25,
+          "track": "SB",
+          "track_type": "Tun, DF",
+          "location": "UW",
+          "direction": "SB",
+          "files": []
+
+        },
+        "009": {
+          "time": "1:54",
+          "speed": 40,
+          "track": "SB",
+          "track_type": "Tun, DF",
+          "location": "Cap. Hill",
+          "direction": "SB",
+          "files": []
+
+        },
+        "010": {
+          "time": "1:59",
+          "speed": 25,
+          "track": "SB",
+          "track_type": "Tun, Emb",
+          "location": "Uni Sta.",
+          "direction": "SB",
+          "files": []
+
+        },
+        "011": {
+          "time": "2:00",
+          "speed": 25,
+          "track": "SB",
+          "track_type": "Unknown",
+          "location": "Pioneer Sq.",
+          "direction": "SB",
+          "files": []
+
         }
       }
     },
-    "rion_1": {
-      "channels": [1, 2, 3],
-      "triax": ["1X", "1Z", "1rss"],
-      "sensor_location": "seat back",
+  "5_30_2020": {
+    "metadata": {
+      "date": "2020-05-30",
+      "num_cars": 2,
+      "load": "AW0"
+    },
       "runs": {
-        "2020-05-24_011706": {
-          "0001": {
-            "split_runs": {
-              "1": {
-                "time": 12043.3989,
-                "speed": 25,
-                "track_type": "metal",
-                "location": "east shore",
-                "direction": "north",
-                "dat_file": "path/or/obj/dummy.dat",
-                "header_file": "path/or/obj/dummy.hdr",
-                "metrics": {
-                  "ride_comfort_seated": 0.85,
-                  "ride_comfort_standing": 0.72
-                }
-              },
-              "2": {
-                "time": 12043.5898,
-                "speed": 30,
-                "track_type": "metal",
-                "location": "east shore",
-                "direction": "north",
-                "dat_file": "path/or/obj/dummy2.dat",
-                "header_file": "path/or/obj/dummy2.hdr",
-                "metrics": {
-                  "ride_comfort_seated": 0.88,
-                  "ride_comfort_standing": 0.75
-                }
-              }
-            }
-          }
+        "001": {
+          "time": "1:04",
+          "speed": 25,
+          "track": "SB",
+          "track_type": "Tun, DF",
+          "location": "Beacon Hill",
+          "direction": "SB",
+          "files": []
+
+        },
+        "002": {
+          "time": "1:05",
+          "speed": 40,
+          "track": "SB",
+          "track_type": "Tun, DF",
+          "location": "Beacon Hill",
+          "direction": "SB",
+          "files": []
+
+        },
+        "003": {
+          "time": "1:19",
+          "speed": 40,
+          "track": "SB",
+          "track_type": "Tun, DF",
+          "location": "Beacon Hill",
+          "direction": "NB",
+          "files": []
+
+        },
+        "004": {
+          "time": "1:20",
+          "speed": 25,
+          "track": "SB",
+          "track_type": "Tun, DF",
+          "location": "Beacon Hill",
+          "direction": "NB",
+          "files": []
+
+        },
+        "005": {
+          "time": "1:29",
+          "speed": 25,
+          "track": "SB",
+          "track_type": "Tun, DF",
+          "location": "Beacon Hill",
+          "direction": "SB",
+          "files": []
+
+        },
+        "006": {
+          "time": "1:30",
+          "speed": 40,
+          "track": "SB",
+          "track_type": "Tun, DF",
+          "location": "Beacon Hill",
+          "direction": "SB",
+          "files": []
+
+        },
+        "007": {
+          "time": "2:07",
+          "speed": 25,
+          "track": "SB",
+          "track_type": "Ag, BT",
+          "location": "Rainier Beach",
+          "direction": "SB",
+          "files": []
+
+        },
+        "008": {
+          "time": "2:11",
+          "speed": 55,
+          "track": "SB",
+          "track_type": "EL, DF",
+          "location": "TIBS",
+          "direction": "SB",
+          "files": []
+
+        },
+        "009": {
+          "time": "2:17",
+          "speed": 55,
+          "track": "SB",
+          "track_type": "El, DF",
+          "location": "TIBS",
+          "direction": "NB",
+          "files": []
+
+        },
+        "010": {
+          "time": "2:19",
+          "speed": 40,
+          "track": "SB",
+          "track_type": "El, DF",
+          "location": "TIBS",
+          "direction": "NB",
+          "files": []
+
+        },
+        "011": {
+          "time": "2:21",
+          "speed": 25,
+          "track": "SB",
+          "track_type": "El, DF",
+          "location": "TIBS",
+          "direction": "NB",
+          "files": []
+
+        },
+        "012": {
+          "time": "2:27",
+          "speed": 40,
+          "track": "SB",
+          "track_type": "El, DF",
+          "location": "TIBS",
+          "direction": "SB",
+          "files": []
+
+        },
+        "013": {
+          "time": "2:28",
+          "speed": 25,
+          "track": "SB",
+          "track_type": "El, DF",
+          "location": "TIBS",
+          "direction": "SB",
+          "files": []
+
+        },
+        "014": {
+          "time": "2:37",
+          "speed": 25,
+          "track": "SB",
+          "track_type": "Ag, BT",
+          "location": "Rainier Beach",
+          "direction": "NB",
+          "files": []
+
         }
       }
     },
-    "rion_2": {
-      "channels": [1, 2, 3],
-      "triax": ["2X", "2Z", "2rss"],
-      "sensor_location": "seat bottom",
+    "5_22_2020": {
+    "metadata": {
+      "date": "2020-05-22",
+      "num_cars": 2,
+      "load": "AW3"
+    },
       "runs": {
-        "2020-05-24_011710": {
-          "0001": {
-            "split_runs": {
-              "1": {
-                "timestamp": 12043.3989,
-                "speed": 25,
-                "location": "east shore",
-                "direction": "north",
-                "track_type": "metal",
-                "dat_file": "path/or/obj/dummy.dat",
-                "header_file": "path/or/obj/dummy.hdr",
-                "metrics": {
-                  "ride_comfort_seated": 0.82,
-                  "ride_comfort_standing": 0.70
-                }
-              },
-              "2": {
-                "timestamp": 12043.5898,
-                "speed": 30,
-                "location": "east shore",
-                "direction": "north",
-                "track_type": "metal",
-                "dat_file": "path/or/obj/dummy2.dat",
-                "header_file": "path/or/obj/dummy2.hdr",
-                "metrics": {
-                  "ride_comfort_seated": 0.86,
-                  "ride_comfort_standing": 0.74
-                }
-              }
-            }
-          }
+        "001": {
+          "time": "1:07",
+          "speed": 25,
+          "track": "NB",
+          "track_type": "Tun, Emb",
+          "location": "Pioneer Sq.",
+          "direction": "NB",
+          "files": []
+
+        },
+        "002": {
+          "time": "1:09",
+          "speed": 25,
+          "track": "NB",
+          "track_type": "Tun, Emb",
+          "location": "Pioneer Sq.",
+          "direction": "NB",
+          "files": []
+
+        },
+        "003": {
+          "time": "1:15",
+          "speed": 55,
+          "track": "NB",
+          "track_type": "Tun, DF",
+          "location": "Capitol Hill",
+          "direction": "NB",
+          "files": []
+
+        },
+        "004": {
+          "time": "1:17",
+          "speed": 40,
+          "track": "NB",
+          "track_type": "Tun, DF",
+          "location": "Capitol Hill",
+          "direction": "NB",
+          "files": []
+
+        },
+        "005": {
+          "time": "1:18",
+          "speed": 25,
+          "track": "NB",
+          "track_type": "Tun, DF",
+          "location": "Capitol Hill",
+          "direction": "NB",
+          "files": []
+
+        },
+        "006": {
+          "time": "1:24",
+          "speed": 55,
+          "track": "SB",
+          "track_type": "Tun, DF",
+          "location": "UW",
+          "direction": "SB",
+          "files": []
+
+        },
+        "007": {
+          "time": "1:27",
+          "speed": 40,
+          "track": "SB",
+          "track_type": "Tun, DF",
+          "location": "UW",
+          "direction": "SB",
+          "files": []
+
+        },
+        "008": {
+          "time": "1:28",
+          "speed": 25,
+          "track": "SB",
+          "track_type": "Tun, DF",
+          "location": "UW",
+          "direction": "SB",
+          "files": []
+
+        },
+        "009": {
+          "time": "1:35",
+          "speed": 25,
+          "track": "SB",
+          "track_type": "Tun, DF",
+          "location": "UW",
+          "direction": "SB",
+          "files": []
+
+        },
+        "010": {
+          "time": "1:36",
+          "speed": 25,
+          "track": "SB",
+          "track_type": "Tun, DF",
+          "location": "UW",
+          "direction": "SB",
+          "files": []
+
         }
       }
     },
-    "rion_3": {
-      "channels": [1, 2, 3],
-      "triax": ["5X", "5Z", "5rss"],
-      "sensor_location": "window frame",
-      "runs": {
-        "2020-05-24_011720": {
-          "0001": {
-            "split_runs": {
-              "1": {
-                "timestamp": 12043.7001,
-                "speed": 25,
-                "location": "east shore",
-                "direction": "north",
-                "track_type": "metal",
-                "dat_file": "path/or/obj/dummy3.dat",
-                "header_file": "path/or/obj/dummy3.hdr",
-                "metrics": {
-                  "ride_comfort_seated": 0.83,
-                  "ride_comfort_standing": 0.71
-                }
-              },
-              "2": {
-                "timestamp": 12043.8902,
-                "speed": 30,
-                "location": "east shore",
-                "direction": "north",
-                "track_type": "metal",
-                "dat_file": "path/or/obj/dummy4.dat",
-                "header_file": "path/or/obj/dummy4.hdr",
-                "metrics": {
-                  "ride_comfort_seated": 0.87,
-                  "ride_comfort_standing": 0.76
-                }
-              }
-            }
-          }
-        }
-      }
+      "5_29_2020": {
+    "metadata": {
+      "date": "2020-05-29",
+      "num_cars": 2,
+      "load": "AW3"
     },
-    "rion_4": {
-      "channels": [1, 2, 3],
-      "triax": ["4X", "4Z", "4rss"],
-      "sensor_location": "wall panel",
       "runs": {
-        "2020-05-24_011730": {
-          "0001": {
-            "split_runs": {
-              "1": {
-                "timestamp": 12044.0001,
-                "speed": 25,
-                "location": "east shore",
-                "direction": "north",
-                "track_type": "metal",
-                "dat_file": "path/or/obj/dummy5.dat",
-                "header_file": "path/or/obj/dummy5.hdr",
-                "metrics": {
-                  "ride_comfort_seated": 0.84,
-                  "ride_comfort_standing": 0.73
-                }
-              },
-              "2": {
-                "timestamp": 12044.1402,
-                "speed": 30,
-                "location": "east shore",
-                "direction": "north",
-                "track_type": "metal",
-                "dat_file": "path/or/obj/dummy6.dat",
-                "header_file": "path/or/obj/dummy6.hdr",
-                "metrics": {
-                  "ride_comfort_seated": 0.89,
-                  "ride_comfort_standing": 0.77
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "rion_5": {
-      "channels": [1, 2],
-      "accel": [1, 2],
-      "sensor_location": "cabin ceiling",
-      "runs": {
-        "2020-05-24_011740": {
-          "0001": {
-            "split_runs": {
-              "1": {
-                "timestamp": 12044.2501,
-                "speed": 29,
-                "location": "east shore",
-                "direction": "north",
-                "track_type": "metal",
-                "dat_file": "path/or/obj/dummy7.dat",
-                "header_file": "path/or/obj/dummy7.hdr",
-                "metrics": {
-                  "ride_comfort_seated": 0.90,
-                  "ride_comfort_standing": 0.78
-                }
-              },
-              "2": {
-                "timestamp": 12044.3988,
-                "speed": 34,
-                "location": "east shore",
-                "direction": "north",
-                "track_type": "metal",
-                "dat_file": "path/or/obj/dummy8.dat",
-                "header_file": "path/or/obj/dummy8.hdr",
-                "metrics": {
-                  "ride_comfort_seated": 0.91,
-                  "ride_comfort_standing": 0.79
-                }
-              }
-            }
-          }
+        "001": {
+          "time": "1:00",
+          "speed": 25,
+          "track": "SB",
+          "track_type": "Tun, DF",
+          "location": "Beacon Hill",
+          "direction": "SB",
+          "files": []
+
+        },
+        "002": {
+          "time": "1:01",
+          "speed": 40,
+          "track": "SB",
+          "track_type": "Tun, DF",
+          "location": "Beacon Hill",
+          "direction": "SB",
+          "files": []
+
+        },
+        "003": {
+          "time": "1:26",
+          "speed": 25,
+          "track": "SB",
+          "track_type": "Ag, BT",
+          "location": "Rainier Beach",
+          "direction": "SB",
+          "files": []
+
+        },
+        "004": {
+          "time": "1:29",
+          "speed": 55,
+          "track": "SB",
+          "track_type": "EL, DF",
+          "location": "TIBS",
+          "direction": "SB",
+          "files": []
+
+        },
+        "005": {
+          "time": "1:31",
+          "speed": 40,
+          "track": "SB",
+          "track_type": "EL, DF",
+          "location": "TIBS",
+          "direction": "SB",
+          "files": []
+
+        },
+        "006": {
+          "time": "1:33",
+          "speed": 25,
+          "track": "SB",
+          "track_type": "EL, DF",
+          "location": "TIBS",
+          "direction": "SB",
+          "files": []
+
+        },
+        "007": {
+          "time": "1:41",
+          "speed": 55,
+          "track": "NB",
+          "track_type": "EL, DF",
+          "location": "TIBS",
+          "direction": "NB",
+          "files": []
+
+        },
+        "008": {
+          "time": "1:44",
+          "speed": 40,
+          "track": "NB",
+          "track_type": "EL, DF",
+          "location": "TIBS",
+          "direction": "NB",
+          "files": []
+
+        },
+        "009": {
+          "time": "1:45",
+          "speed": 25,
+          "track": "NB",
+          "track_type": "EL, DF",
+          "location": "TIBS",
+          "direction": "NB",
+          "files": []
+
+        },
+        "010": {
+          "time": "1:49",
+          "speed": 55,
+          "track": "NB",
+          "track_type": "EL, DF",
+          "location": "TIBS",
+          "direction": "SB",
+          "files": []
+
+        },
+        "011": {
+          "time": "2:04",
+          "speed": 55,
+          "track": "NB",
+          "track_type": "EL, DF",
+          "location": "TIBS",
+          "direction": "NB",
+          "files": []
+
+        },
+        "012": {
+          "time": "2:10",
+          "speed": 25,
+          "track": "NB",
+          "track_type": "Ag, BT",
+          "location": "Rainier Beach",
+          "direction": "NB",
+          "files": []
+
+        },
+        "013": {
+          "time": "2:31",
+          "speed": 40,
+          "track": "NB",
+          "track_type": "Tun, DF",
+          "location": "Beacon Hill",
+          "direction": "NB",
+          "files": []
+
+        },
+        "014": {
+          "time": "2:33",
+          "speed": 25,
+          "track": "NB",
+          "track_type": "Tun, DF",
+          "location": "Beacon Hill",
+          "direction": "NB",
+          "files": []
+
         }
       }
     }
-  }
 }
