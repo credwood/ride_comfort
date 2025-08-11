@@ -3,3 +3,6 @@ __pycache__/
 *.pyo
 *.pyd
 rion_times.txt
+calculations.ipynb
+json.ipynb
+scratch.json
