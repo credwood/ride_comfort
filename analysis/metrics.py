@@ -1,4 +1,3 @@
-
 import numpy as np
 
 def compute_nmv(Ax_95, Ay_95, Az_95):
