@@ -72,5 +72,16 @@ def load_all_triax(dir_path: str):
                     RAVE_triax_data[triax][dim] = load_csv(data_path)
                 else:
                     triax_data[triax][dim] = load_csv(data_path)
-
+    # Ensure all triaxes have three dimensions
+    for triax in triax_data:
+        if triax == "5":
+            if len(triax_data[triax]["4"]) == 0:
+                triax_data[triax]["4"] = None
+                RAVE_triax_data[triax]["4"] = None
+        else:
+            if len(triax_data[triax]["1"]) == 0:
+                triax_data[triax] = None
+                RAVE_triax_data[triax] = None
+        
+   
     return triax_data, RAVE_triax_data
