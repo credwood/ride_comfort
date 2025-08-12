@@ -208,3 +208,20 @@ def plot_distributions(C_cx, C_cy, C_cz, triax):
 
     plt.tight_layout()
     plt.show()
+
+def plot_cumulative_distribution(C_cx, C_cy, C_cz, triax):
+    comfort_data = [
+        ("Cx", C_cx, "skyblue"),
+        ("Cy", C_cy, "lightgreen"),
+        ("Cz", C_cz, "salmon")
+    ]
+    fig, axes = plt.subplots(3, 1, figsize=(8, 10), sharex=False)
+
+    for ax, (label, data, color) in zip(axes, comfort_data):
+        sns.ecdfplot(data, ax=ax, color=color)
+        ax.set_title(f'Cumulative Distribution of {label} for Triax {triax}', fontsize=12)
+        ax.set_ylabel('Cumulative Probability', fontsize=10)
+        ax.set_xlabel('Comfort Metric Value (m/s²)', fontsize=10)
+        ax.grid(True, linestyle='--', alpha=0.5)
+    plt.tight_layout()
+    plt.show()  
