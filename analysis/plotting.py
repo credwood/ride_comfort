@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import seaborn as sns
 
 def plot_comfort_thresholds_nvm(nmvs, categories):
     plt.figure()
@@ -185,5 +186,25 @@ def plot_iso_timeseries(t, x_iso, y_iso, z_iso, a_v, a_v_5s=None, t_5s=None):
 
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5))
     plt.gca()
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_distributions(C_cx, C_cy, C_cz, triax):
+    comfort_data = [
+        ("Cx", C_cx, "skyblue"),
+        ("Cy", C_cy, "lightgreen"),
+        ("Cz", C_cz, "salmon")
+    ]
+
+    fig, axes = plt.subplots(3, 1, figsize=(8, 10), sharex=False)
+
+    for ax, (label, data, color) in zip(axes, comfort_data):
+        sns.histplot(data, kde=True, ax=ax, bins=20, color=color)
+        ax.set_title(f'Distribution of {label} for Triax {triax}', fontsize=12)
+        ax.set_ylabel('Frequency', fontsize=10)
+        ax.set_xlabel('Comfort Metric Value (m/s²)', fontsize=10)
+        ax.grid(True, linestyle='--', alpha=0.5)
+
     plt.tight_layout()
     plt.show()
