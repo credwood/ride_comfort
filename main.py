@@ -1,6 +1,7 @@
 import argparse
 from copy import deepcopy
 import json
+from multiprocessing import Pool, cpu_count
 import os
 import sys
 
@@ -201,7 +202,7 @@ def process_data(args):
         t_5s_minutes = t_5s.dt.total_seconds() / 60
         # 5s signals plot
         Cx, Cy, Cz = metrics_dict[str(triax)]["Cx"], metrics_dict[str(triax)]["Cy"], metrics_dict[str(triax)]["Cz"]
-        plot_comfort_timeseries(t_5s_minutes, Cx, Cy, Cz, ride_obj, save=True, save_dir=args.data_path)
+        plot_comfort_timeseries(t_5s_minutes, Cx, Cy, Cz, ride_obj, triax, save=True, save_dir=args.data_path)
     
     #### For av calculation, note that I'm not implementing the kb control flow ###
 
@@ -267,7 +268,7 @@ def process_data(args):
             x5,
             y5,
             z5,
-            metrics_dict[str(triax)]["Cx"], metrics_dict[str(triax)]["Cy"], metrics_dict[str(triax)]["Cz"], ride_obj, save=True, save_dir=args.data_path
+            metrics_dict[str(triax)]["Cx"], metrics_dict[str(triax)]["Cy"], metrics_dict[str(triax)]["Cz"], ride_obj, triax, save=True, save_dir=args.data_path
         )
     
     for triax in range(1, 7):
@@ -292,7 +293,7 @@ def process_data(args):
         a_v = metrics_dict[str(triax)]["av"]
         a_v_5s = metrics_dict[str(triax)]["av_5s"]
 
-        plot_iso_timeseries(t_all, X_ISO, Y_ISO, Z_ISO, a_v, ride_obj, save=True, save_dir=args.data_path)
+        plot_iso_timeseries(t_all, X_ISO, Y_ISO, Z_ISO, a_v, ride_obj, triax=triax, save=True, save_dir=args.data_path)
     
 
     for triax in range(1, 7):
@@ -314,7 +315,7 @@ def process_data(args):
             Y_VDV = raw["2"]['WD4th_VDV']
             Z_VDV = raw["3"]['WK4th_VDV']
             
-        plot_vdv_over_time(t_all, X_VDV, Y_VDV, Z_VDV, ride_obj, save=True, save_dir=args.data_path)
+        plot_vdv_over_time(t_all, X_VDV, Y_VDV, Z_VDV, ride_obj, triax=triax, save=True, save_dir=args.data_path)
     
     for triax in range(1, 7):
         raw = non_rave[str(triax)]
@@ -346,10 +347,19 @@ def process_data(args):
             compute_vdv_ratios(Y_VDV, compute_vdv(Y_ISO)),
             compute_vdv_ratios(Z_VDV, compute_vdv(Z_ISO))
         ]
-        plot_ratio_comparison(t_all, ratios, labels=['X', 'Y', 'Z'], ride_obj=ride_obj, save=True, save_dir=args.data_path)
+        plot_ratio_comparison(t_all, ratios, labels=['X', 'Y', 'Z'], ride_obj=ride_obj, triax=triax, save=True, save_dir=args.data_path)
     
     ride_obj.metrics_dict = metrics_dict
     ride_obj.save_to_json(f"data/{ride_obj.ride_id}_ride_metrics.json")
+
+
+def multiprocess_data(args):
+    """
+    - We will map a run for each data to a process, or as many runs as there are CPU cores.
+    - This function assumes that the data folder is the root for each date, and subfolders are names 
+    according to run id.
+    """
+
 
 
 if __name__ == "__main__":
@@ -373,7 +383,13 @@ if __name__ == "__main__":
         "-run", type=str,
         help="Run number to be processed."
     )
+    parser.add_argument(
+        "--multiprocess", default=False,
+    )
     
     args = parser.parse_args()
 
-    process_data(args)
+    if not args.multiprocess:
+        process_data(args)
+    else:
+        multiprocess_data(args)

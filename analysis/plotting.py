@@ -48,7 +48,7 @@ def plot_comfort_thresholds_nvd_nva(nvds: list,
                                     nvaz: list, 
                                     categories: list, 
                                     pair_dict: list,
-                                    ride_obj: Ride, 
+                                    ride_obj: Ride,
                                     save: bool = False, 
                                     save_dir: str = None) -> None:
     plt.figure()
@@ -91,6 +91,7 @@ def plot_vdv_over_time(t: pd.Series,
                        vdv_y: pd.Series, 
                        vdv_z: pd.Series,
                        ride_obj: Ride,
+                       triax: str,
                        save: bool = False, 
                        save_dir: str = None) -> None:
     
@@ -110,16 +111,17 @@ def plot_vdv_over_time(t: pd.Series,
         plt.show()
     else:
         if isinstance(save_dir, str):
-            plt.savefig(f"{save_dir}/{ride_obj.ride_id}_vdv_over_time.png", dpi=300, bbox_inches='tight')
+            plt.savefig(f"{save_dir}/{ride_obj.ride_id}_triax_{triax}_vdv_over_time.png", dpi=300, bbox_inches='tight')
             plt.close()
         else:
-            plt.savefig(f'{ride_obj.ride_id}_vdv_over_time.png', dpi=300, bbox_inches='tight')
+            plt.savefig(f'{ride_obj.ride_id}_triax_{triax}_vdv_over_time.png', dpi=300, bbox_inches='tight')
             plt.close()
 
 def plot_ratio_comparison(t: pd.Series, 
                           ratios: pd.Series, 
                           labels: list,
-                          ride_obj: Ride, 
+                          ride_obj: Ride,
+                          triax: str, 
                           save: bool = False, 
                           save_dir: str = None) -> None:
     t = [i for i in range(len(t))]
@@ -138,10 +140,10 @@ def plot_ratio_comparison(t: pd.Series,
         plt.show()
     else:
         if isinstance(save_dir, str):
-            plt.savefig(f"{save_dir}/{ride_obj.ride_id}_vdv_ratio_comparison.png", dpi=300, bbox_inches='tight')
+            plt.savefig(f"{save_dir}/{ride_obj.ride_id}_triax_{triax}_vdv_ratio_comparison.png", dpi=300, bbox_inches='tight')
             plt.close()
         else:
-            plt.savefig(f'{ride_obj.ride_id}_vdv_ratio_comparison.png', dpi=300, bbox_inches='tight')
+            plt.savefig(f'{ride_obj.ride_id}_triax_{triax}_vdv_ratio_comparison.png', dpi=300, bbox_inches='tight')
             plt.close()
 
 
@@ -149,7 +151,8 @@ def plot_comfort_timeseries(t_5s_minutes: pd.Series,
                             Cx: pd.Series, 
                             Cy: pd.Series, 
                             Cz: pd.Series,
-                            ride_obj: Ride, 
+                            ride_obj: Ride,
+                            triax: str, 
                             save: bool = False, 
                             save_dir: str = None) -> None:
     
@@ -195,10 +198,10 @@ def plot_comfort_timeseries(t_5s_minutes: pd.Series,
         plt.show()
     else:
         if isinstance(save_dir, str):
-            plt.savefig(f"{save_dir}/{ride_obj.ride_id}_comfort_timeseries_EN.png", dpi=300, bbox_inches='tight')
+            plt.savefig(f"{save_dir}/{ride_obj.ride_id}_triax_{triax}_comfort_timeseries_EN.png", dpi=300, bbox_inches='tight')
             plt.close()
         else:
-            plt.savefig(f'{ride_obj.ride_id}_comfort_timeseries_EN.png', dpi=300, bbox_inches='tight')
+            plt.savefig(f'{ride_obj.ride_id}_triax_{triax}_comfort_timeseries_EN.png', dpi=300, bbox_inches='tight')
             plt.close()
 
 
@@ -210,6 +213,7 @@ def plot_compare_all_metrics(t_5s_minutes: pd.Series,
                              C_cy: pd.Series, 
                              C_cz: pd.Series,
                              ride_obj: Ride,
+                             triax: str,
                              save: bool = False, 
                              save_dir: str = None) -> None:
     """
@@ -251,10 +255,10 @@ def plot_compare_all_metrics(t_5s_minutes: pd.Series,
         plt.show()
     else:
         if isinstance(save_dir, str):
-            plt.savefig(f"{save_dir}/{ride_obj.ride_id}_all_metrics.png", dpi=300, bbox_inches='tight')
+            plt.savefig(f"{save_dir}/{ride_obj.ride_id}_triax_{triax}_all_metrics.png", dpi=300, bbox_inches='tight')
             plt.close()
         else:
-            plt.savefig(f'{ride_obj.ride_id}_all_metrics.png', dpi=300, bbox_inches='tight')
+            plt.savefig(f'{ride_obj.ride_id}_triax_{triax}_all_metrics.png', dpi=300, bbox_inches='tight')
             plt.close()
 
 
@@ -263,7 +267,8 @@ def plot_iso_timeseries(t: pd.Series,
                         y_iso: pd.Series, 
                         z_iso: pd.Series, 
                         a_v: pd.Series,
-                        ride_obj: Ride, 
+                        ride_obj: Ride,
+                        triax: str, 
                         save: bool = False, 
                         save_dir: str = None) -> None:
     # Ensure t is float
@@ -293,10 +298,10 @@ def plot_iso_timeseries(t: pd.Series,
         plt.show()
     else:
         if isinstance(save_dir, str):
-            plt.savefig(f"{save_dir}/{ride_obj.ride_id}_iso_timeseries.png", dpi=300, bbox_inches='tight')
+            plt.savefig(f"{save_dir}/{ride_obj.ride_id}_triax_{triax}_iso_timeseries.png", dpi=300, bbox_inches='tight')
             plt.close()
         else:
-            plt.savefig(f'{ride_obj.ride_id}_iso_timeseries.png', dpi=300, bbox_inches='tight')
+            plt.savefig(f'{ride_obj.ride_id}_triax_{triax}_iso_timeseries.png', dpi=300, bbox_inches='tight')
             plt.close()
 
 
@@ -327,10 +332,10 @@ def plot_distributions(C_cx: pd.Series,
         plt.show()
     else:
         if isinstance(save_dir, str):
-            plt.savefig(f"{save_dir}/{ride_obj.ride_id}_distributions.png", dpi=300, bbox_inches='tight')
+            plt.savefig(f"{save_dir}/{ride_obj.ride_id}_triax_{triax}_distributions.png", dpi=300, bbox_inches='tight')
             plt.close()
         else:
-            plt.savefig(f'{ride_obj.ride_id}_distributions.png', dpi=300, bbox_inches='tight')
+            plt.savefig(f'{ride_obj.ride_id}_triax_{triax}_distributions.png', dpi=300, bbox_inches='tight')
             plt.close()
 
 def plot_cumulative_distribution(C_cx: pd.Series, 
@@ -358,8 +363,8 @@ def plot_cumulative_distribution(C_cx: pd.Series,
         plt.show()
     else:
         if isinstance(save_dir, str):
-            plt.savefig(f"{save_dir}/{ride_obj.ride_id}_cumulative_dist.png", dpi=300, bbox_inches='tight')
+            plt.savefig(f"{save_dir}/{ride_obj.ride_id}_triax_{triax}_cumulative_dist.png", dpi=300, bbox_inches='tight')
             plt.close()
         else:
-            plt.savefig(f'{ride_obj.ride_id}_cumulative_dist.png', dpi=300, bbox_inches='tight')
+            plt.savefig(f'{ride_obj.ride_id}_triax_{triax}_cumulative_dist.png', dpi=300, bbox_inches='tight')
             plt.close()  
