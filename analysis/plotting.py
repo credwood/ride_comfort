@@ -1,12 +1,18 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import seaborn as sns
 
-def plot_comfort_thresholds_nvm(nmvs, categories):
+def plot_comfort_thresholds_nvm(nmvs: list, categories: list, floor_triaxials: list) -> None:
     plt.figure()
 
     for triax, nmv in nmvs:
-        plt.scatter(1, nmv, label=f'triax: {triax} N_M_V')
+        if triax in floor_triaxials:
+            plt.scatter(.5, nmv, label=f'Floor Triax: {triax} N_M_V', marker='x')
+    
+    for triax, nmv in nmvs:
+        if triax not in floor_triaxials:
+            plt.scatter(1.25, nmv, label=f'Seat Triax: {triax} N_M_V', marker='o')
 
     plt.xlim(0, 2)
     plt.ylim(0, 5)
@@ -15,26 +21,26 @@ def plot_comfort_thresholds_nvm(nmvs, categories):
         plt.axhline(lo, linestyle='-', color='gray', linewidth=0.5)
         plt.text(1.5, lo + 0.1, label, fontsize=8, verticalalignment='bottom')
 
-    plt.legend(loc='lower left')
+    plt.legend(loc='upper left')
     plt.title('Mean Comfort (Standard Method) Index NMV')
     plt.xticks([])
     plt.gca()
     plt.tight_layout()
     plt.show()
 
-def plot_comfort_thresholds_nvd_nva(nvds, nvaz, categories, pair_dict):
+def plot_comfort_thresholds_nvd_nva(nvds: list, nvaz: list, categories: list, pair_dict: list) -> None:
     plt.figure()
 
     for triax, nvd in nvds:
         if nvd is None:
             continue
-        plt.scatter(1, nvd, label=f'triax: {triax} Standing (NVD)', marker='x')
+        plt.scatter(.5, nvd, label=f'triax: {triax} Standing (NVD)', marker='x')
     
     for triax, nva in nvaz:
         if nva is None:
             continue
         orientation = [label for (_, s), label in pair_dict if s == triax][0]
-        plt.scatter(1, nva, label=f'triax: {triax} Seated (NVA), {orientation}', marker='o')
+        plt.scatter(1.25, nva, label=f'triax: {triax} Seated (NVA), {orientation}', marker='o')
     
     plt.xlim(0, 2)
     plt.ylim(0, 5)
@@ -50,7 +56,7 @@ def plot_comfort_thresholds_nvd_nva(nvds, nvaz, categories, pair_dict):
     plt.tight_layout()
     plt.show()
 
-def plot_vdv_over_time(t, vdv_x, vdv_y, vdv_z):
+def plot_vdv_over_time(t: pd.Series, vdv_x: pd.Series, vdv_y: pd.Series, vdv_z: pd.Series) -> None:
     t = [i for i in range(len(t))]
 
     plt.figure()
@@ -65,7 +71,7 @@ def plot_vdv_over_time(t, vdv_x, vdv_y, vdv_z):
     plt.tight_layout()
     plt.show()
 
-def plot_ratio_comparison(t, ratios, labels):
+def plot_ratio_comparison(t: pd.Series, ratios: pd.Series, labels: list) -> None:
     t = [i for i in range(len(t))]
 
     plt.figure()
@@ -81,7 +87,7 @@ def plot_ratio_comparison(t, ratios, labels):
     plt.show()
 
 
-def plot_comfort_timeseries(t_5s_minutes, Cx, Cy, Cz):
+def plot_comfort_timeseries(t_5s_minutes: pd.Series, Cx: pd.Series, Cy: pd.Series, Cz: pd.Series) -> None:
     
     t_5s_minutes = [i * 5 for i in range(len(t_5s_minutes))]
     plt.figure()
@@ -124,7 +130,13 @@ def plot_comfort_timeseries(t_5s_minutes, Cx, Cy, Cz):
     plt.show()
 
 
-def plot_compare_all_metrics(t_5s_minutes, X_ISO_5s, Y_ISO_5s, Z_ISO_5s, C_cx, C_cy, C_cz):
+def plot_compare_all_metrics(t_5s_minutes: pd.Series, 
+                             X_ISO_5s: pd.Series, 
+                             Y_ISO_5s: pd.Series, 
+                             Z_ISO_5s: pd.Series, 
+                             C_cx: pd.Series, 
+                             C_cy: pd.Series, 
+                             C_cz: pd.Series) -> None:
     """
     Compare ISO and EN comfort metrics at 5s intervals.
     
@@ -163,7 +175,7 @@ def plot_compare_all_metrics(t_5s_minutes, X_ISO_5s, Y_ISO_5s, Z_ISO_5s, C_cx, C
     plt.show()
 
 
-def plot_iso_timeseries(t, x_iso, y_iso, z_iso, a_v, a_v_5s=None, t_5s=None):
+def plot_iso_timeseries(t: pd.Series, x_iso: pd.Series, y_iso: pd.Series, z_iso: pd.Series, a_v: pd.Series) -> None:
     # Ensure t is float
     if hasattr(t, "dt"):
         t = t.dt.total_seconds() / 60
@@ -190,7 +202,7 @@ def plot_iso_timeseries(t, x_iso, y_iso, z_iso, a_v, a_v_5s=None, t_5s=None):
     plt.show()
 
 
-def plot_distributions(C_cx, C_cy, C_cz, triax):
+def plot_distributions(C_cx: pd.Series, C_cy: pd.Series, C_cz: pd.Series, triax: int) -> None:
     comfort_data = [
         ("Cx", C_cx, "skyblue"),
         ("Cy", C_cy, "lightgreen"),
@@ -209,7 +221,7 @@ def plot_distributions(C_cx, C_cy, C_cz, triax):
     plt.tight_layout()
     plt.show()
 
-def plot_cumulative_distribution(C_cx, C_cy, C_cz, triax):
+def plot_cumulative_distribution(C_cx: pd.Series, C_cy: pd.Series, C_cz: pd.Series, triax: int) -> None:
     comfort_data = [
         ("Cx", C_cx, "skyblue"),
         ("Cy", C_cy, "lightgreen"),
