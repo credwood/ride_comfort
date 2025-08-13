@@ -1,99 +1,150 @@
-from analysis.loaders import load_rave_and_nonrave
-from analysis.metrics import (
-    compute_nmv, compute_nvd, compute_av,
-    compute_vdv, compute_vdv_ratios
-)
-from analysis.categories import categorize
-from analysis.plotting import (
-    plot_comfort_thresholds,
-    plot_vdv_over_time,
-    plot_ratio_comparison,
-    plot_comfort_timeseries,
-    plot_iso_timeseries
-)
+import argparse
+from copy import deepcopy
+import json
+import os
+import sys
 
 import numpy as np
 import pandas as pd
 
-# Category definitions
-categories = [
-    ((0, 1.5), 'Very Comfortable'),
-    ((1.5, 2.5), 'Comfortable'),
-    ((2.5, 3.5), 'Medium'),
-    ((3.5, 4.5), 'Uncomfortable'),
-    ((4.5, 6.0), 'Very Uncomfortable')
-]
-
-# Load data
-(x_rave, y_rave, z_rave), (x_raw, y_raw, z_raw) = load_rave_and_nonrave(
-    "data/X-RAVE.csv", "data/Y-RAVE.csv", "data/Z-RAVE.csv"
+from analysis.loaders import load_all_triax
+from analysis.metrics import (
+    compute_nmv, compute_nvd, compute_av,
+    compute_vdv, compute_vdv_ratios, compute_nva,
+    get_mean_and_std
+)
+from analysis.categories import categorize
+from analysis.plotting import (
+    plot_comfort_thresholds_nvm,
+    plot_comfort_thresholds_nvd_nva,
+    plot_vdv_over_time,
+    plot_ratio_comparison,
+    plot_compare_all_metrics,
+    plot_comfort_timeseries,
+    plot_iso_timeseries,
+    plot_distributions,
+    plot_cumulative_distribution
 )
 
-# Every 5th running average
-x5 = x_rave.iloc[4::5]
-y5 = y_rave.iloc[4::5]
-z5 = z_rave.iloc[4::5]
-
-Cx = x5['ISO_WD']
-Cy = y5['ISO_WD']
-Cz = z5['EN_WB']
+from data_class.ride_class import Ride, triaxial_metrics
 
 
-# Percentile inputs
-Ax95 = np.percentile(Cx, 95)
-Ay95 = np.percentile(Cy, 95)
-Az95 = np.percentile(Cz, 95)
-Ax50 = np.percentile(Cx, 50)
-Ay50 = np.percentile(Cy, 50)
-Az50 = np.percentile(Cz, 50)
+def process_data(args):
+    # Category definitions Nmv, Nvd, Nva
+    categories = [
+        ((0, 1.5), 'Very Comfortable'),
+        ((1.5, 2.5), 'Comfortable'),
+        ((2.5, 3.5), 'Medium'),
+        ((3.5, 4.5), 'Uncomfortable'),
+        ((4.5, 6.0), 'Very Uncomfortable')
+    ]
 
-# Calculate comfort indices
-N_MV = compute_nmv(Ax95, Ay95, Az95)
-N_VD = compute_nvd(Ax50, Ay50, Az50, Ay95)
+    # Category definitions Ccy, Ccz - might need to add to categories.py
+    cats_cont = [
+        ((0,0.2), 'Very Comfortable'),
+        ((0.2,0.3), 'Comfortable'),
+        ((0.3,0.4), 'Medium'),
+        ((0.4,1), 'Less Comfortable')
+    ]
 
-print(f"N_M_V = {N_MV:.2f} → {categorize(N_MV, categories)}")
-print(f"N_V_D = {N_VD:.2f} → {categorize(N_VD, categories)}")
+    # Pair floor & seat triaxials (floor,seat)
+    pairs = [
+        ((1,6), 'Motor Truck'),
+        ((3,2), 'Between Trucks'),
+        ((5,4), 'Center Truck')
+    ]
 
-# Mean Comfort Index plot
-plot_comfort_thresholds(N_MV, N_VD, categories)
+    # Floor triaxes (1,3,5) get a N_V_D, but seat triaxes get a N_V_A.
 
-# Full time vector 
-t_all = pd.to_timedelta(x_raw['Number'], unit='s')
-# Downsampled time vector to match 5s interval RAVE slices
-t_5s = t_all[4::5]
+    floor_triaxes = [1, 3, 5]
 
-# 5s signals plot
-plot_comfort_timeseries(t_5s, Cx, Cy, Cz)
+    # instantiate Ride object
+    ride = Ride(args.run, args.date, json_path=args.json_path)
 
-#### For av calculation, note that I'm not implementing the kb control flow ###
+    # Load data - will need to load paired triaxes (floor = p, seat = a&d)
+    non_rave, rave = load_all_triax(args.data_path)
 
-# Compute AV
-X_ISO = x_raw['ISO_WD']
-Y_ISO = y_raw['ISO_WD']
-Z_ISO = z_raw['ISO_WB']
+    metrics_dict = deepcopy(triaxial_metrics)
 
-a_v = compute_av(X_ISO, Y_ISO, Z_ISO)
+    for triax in range(1, 7):
+        rave_curr = rave[str(triax)]
+        
+        if rave_curr is None:
+            continue
 
-# Compute a_v 
-a_v_5s = compute_av(x5['ISO_WD'], y5['ISO_WD'], z5['ISO_WB'])
+        # Calculate metrics for each triaxial
+        # Every 5th running average
+        if triax == 5:
+            x5 = rave_curr["4"].iloc[4::5]
+            y5 = rave_curr["5"].iloc[4::5]
+            z5 = rave_curr["6"].iloc[4::5]
+        else:
+            x5 = rave_curr["1"].iloc[4::5]
+            y5 = rave_curr["2"].iloc[4::5]
+            z5 = rave_curr["3"].iloc[4::5]
 
-print(f"a_v (1s ISO composite) = {np.mean(a_v):.3f} m/s²")
-print(f"a_v_5s (from RAVE)      = {np.mean(a_v_5s):.3f} m/s²")
+        Cx = x5['ISO-WD']
+        Cy = y5['ISO-WD']
+        Cz = z5['EN-WB']
+        metrics_dict[str(triax)]["Cx"] = Cx
+        metrics_dict[str(triax)]["Cy"] = Cy
+        metrics_dict[str(triax)]["Cz"] = Cz
+        metrics_dict[str(triax)]["Cx_mean"], metrics_dict[str(triax)]["Cx_std"] = get_mean_and_std(Cx)
+        metrics_dict[str(triax)]["Cy_mean"], metrics_dict[str(triax)]["Cy_std"] = get_mean_and_std(Cy)
+        metrics_dict[str(triax)]["Cz_mean"], metrics_dict[str(triax)]["Cz_std"] = get_mean_and_std(Cz)
+        metrics_dict[str(triax)]["max_Cx"] = Cx.max()
+        metrics_dict[str(triax)]["max_Cy"] = Cy.max()
+        metrics_dict[str(triax)]["max_Cz"] = Cz.max()
 
-plot_iso_timeseries(t_all, X_ISO, Y_ISO, Z_ISO, a_v, a_v_5s, t_5s)
+
+        # Percentile inputs
+        Ax95 = np.percentile(Cx, 95)
+        Ay95 = np.percentile(Cy, 95)
+        Az95 = np.percentile(Cz, 95)
+        Ax50 = np.percentile(Cx, 50)
+        Ay50 = np.percentile(Cy, 50)
+        Az50 = np.percentile(Cz, 50)
+
+        # Calculate comfort indices
+        N_MV = compute_nmv(Ax95, Ay95, Az95)
+        if triax in floor_triaxes:
+            N_VD = compute_nvd(Ax50, Ay50, Az50, Ay95)
+        else:
+            N_VD = None
+        metrics_dict[str(triax)]["N_MV"] = N_MV
+        metrics_dict[str(triax)]["N_VD"] = N_VD
 
 
-# VDV data
-X_VDV = x_raw['WD4th_VDV']
-Y_VDV = y_raw['WD4th_VDV']
-Z_VDV = z_raw['WK4th_VDV']
+        print(f"triax:{triax} N_M_V = {N_MV:.2f} → {categorize(N_MV, categories)}")
 
-plot_vdv_over_time(t_all, X_VDV, Y_VDV, Z_VDV)
+        if N_VD is not None:
+            print(f"triax:{triax} N_V_D = {N_VD:.2f} → {categorize(N_VD, categories)}")
 
-ratios = [
-    compute_vdv_ratios(X_VDV, compute_vdv(X_ISO)),
-    compute_vdv_ratios(Y_VDV, compute_vdv(Y_ISO)),
-    compute_vdv_ratios(Z_VDV, compute_vdv(Z_ISO))
-]
 
-plot_ratio_comparison(t_all, ratios, labels=['X', 'Y', 'Z'])
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Process ride comfort data.")
+    parser.add_argument(
+        "--data_path", type=str, default="data/",
+        help="Path to the directory containing ride data files."
+    )
+    parser.add_argument(
+        "--json_path", type=str, default="data_schema.json",
+        help="Path to the JSON schema file."
+    )
+    parser.add_argument("--output_path", type=str, default="output/",
+        help="Path to save the processed data and plots."
+    )
+    parser.add_argument( 
+        "-date", type=str,
+        help="Date of the ride data to be processed. Must be one of the valid dates."
+    )
+    parser.add_argument(
+        "-run", type=str,
+        help="Run number to be processed."
+    )
+    
+    args = parser.parse_args()
+
+    process_data(*args)

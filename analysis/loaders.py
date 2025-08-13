@@ -1,5 +1,7 @@
 import os
 
+from typing import Tuple
+
 import pandas as pd
 
 def clean_names(df: pd.DataFrame) -> pd.DataFrame:
@@ -7,11 +9,11 @@ def clean_names(df: pd.DataFrame) -> pd.DataFrame:
     df.columns = df.columns.str.strip()
     return df
 
-def load_csv(filepath, skiprows=16):
+def load_csv(filepath: str, skiprows=16) -> pd.DataFrame:
     df = pd.read_csv(filepath, skiprows=skiprows, index_col=False)
     return clean_names(df)
 
-def load_rave_and_nonrave(folder_path: str):
+def load_rave_and_nonrave(folder_path: str) -> Tuple[Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame], Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]]  :
     all_files = sorted(os.listdir(folder_path))
 
     rave_files = [f for f in all_files if "-RAVE" in f.upper()]
@@ -32,7 +34,7 @@ def load_rave_and_nonrave(folder_path: str):
 
     return (x_rave, y_rave, z_rave), (x_raw, y_raw, z_raw)
 
-def load_all_triax(dir_path: str):
+def load_all_triax(dir_path: str, flip_x_y: bool=False) -> Tuple[dict, dict]:
     """
     1. map sensors to triax
     2. identiify direction of each of the three files mapped to a triax
@@ -82,6 +84,17 @@ def load_all_triax(dir_path: str):
             if len(triax_data[triax]["1"]) == 0:
                 triax_data[triax] = None
                 RAVE_triax_data[triax] = None
-        
+    
+    if flip_x_y:
+        for triax in triax_data:
+            if triax == "5":
+                if triax_data[triax] is not None:
+                    triax_data[triax]["4"], triax_data[triax]["5"] = triax_data[triax]["5"], triax_data[triax]["4"]
+                    RAVE_triax_data[triax]["4"], RAVE_triax_data[triax]["5"] = RAVE_triax_data[triax]["5"], RAVE_triax_data[triax]["4"]
+            else:
+                if triax_data[triax] is not None:
+                    triax_data[triax]["1"], triax_data[triax]["2"] = triax_data[triax]["2"], triax_data[triax]["1"]
+                    RAVE_triax_data[triax]["1"], RAVE_triax_data[triax]["2"] = RAVE_triax_data[triax]["2"], RAVE_triax_data[triax]["1"]
+
    
     return triax_data, RAVE_triax_data

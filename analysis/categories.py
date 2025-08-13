@@ -1,5 +1,5 @@
 
-def categorize(value, categories):
+def categorize(value: float, categories: list) -> str:
     matches = [label for (lo, hi), label in categories if lo < value < hi]
 
     if len(matches) == 1:
