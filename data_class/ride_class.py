@@ -15,10 +15,11 @@ class RideMetaData:
         with open(file_path, 'r') as file:
             data = json.load(file)
             data = data[self.date]
-            ride_data = data.get(self.ride_id, {})
+            ride_data = data["runs"].get(self.ride_id, {})
             if not ride_data:
                 raise ValueError(f"No data found for ride_id: {self.ride_id} on date: {self.date}")
             
+        self.__dict__.update(data["metadata"])
         self.__dict__.update(ride_data)
     
     def __repr__(self):
@@ -33,6 +34,6 @@ class RideMetaData:
 
 
 class Ride(RideMetaData):
-    def __init__(self, ride_id: str, date: str):
-        super().__init__(ride_id, date)
+    def __init__(self, ride_id: str, date: str, json_path: str = "data_schema.json" ):
+        super().__init__(ride_id, date, json_path)
         self.metrics_dict = None
