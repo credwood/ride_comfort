@@ -172,7 +172,7 @@ def process_data(args):
 
         N_MVs.append((triax, N_MV))
 
-    plot_comfort_thresholds_nvm(N_MVs, categories, floor_triaxes, ride_obj, safe=True, save_dir=args.data_path)
+    plot_comfort_thresholds_nvm(N_MVs, categories, floor_triaxes, ride_obj, save=True, save_dir=args.data_path)
 
     N_VAs = []
     N_VDs = []
@@ -362,7 +362,7 @@ if __name__ == "__main__":
         "--json_path", type=str, default="data_schema.json",
         help="Path to the JSON schema file."
     )
-    parser.add_argument("--output_path", type=str, default="output/",
+    parser.add_argument("--output_path", type=str, default="data/",
         help="Path to save the processed data and plots."
     )
     parser.add_argument( 
@@ -376,4 +376,4 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
 
-    process_data(*args)
+    process_data(args)
