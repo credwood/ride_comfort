@@ -3,6 +3,7 @@ from copy import deepcopy
 import json
 from multiprocessing import Pool, cpu_count
 import os
+import re
 import sys
 
 import numpy as np
@@ -63,9 +64,16 @@ def process_data(args):
     ride_obj = Ride(args.run, args.date, json_path=args.json_path)
 
     # Load data - will need to load paired triaxes (floor = p, seat = a&d)
-    non_rave, rave = load_all_triax(args.data_path)
+    if args.multiprocess:
+        data_path = os.path.join(args.data_path, args.run)
+        non_rave, rave = load_all_triax(data_path)
+        args.data_path = data_path
+    else:
+        non_rave, rave = load_all_triax(args.data_path)
+        data_path = args.data_path
 
     metrics_dict = deepcopy(triaxial_metrics)
+
 
     for triax in range(1, 7):
         rave_curr = rave[str(triax)]
@@ -350,16 +358,67 @@ def process_data(args):
         plot_ratio_comparison(t_all, ratios, labels=['X', 'Y', 'Z'], ride_obj=ride_obj, triax=triax, save=True, save_dir=args.data_path)
     
     ride_obj.metrics_dict = metrics_dict
-    ride_obj.save_to_json(f"data/{ride_obj.ride_id}_ride_metrics.json")
+    ride_obj.save_to_json(f"{data_path}/{ride_obj.ride_id}_ride_metrics.json")
 
+
+def _process_wrapper(arg_obj):
+    return process_data(arg_obj)  
+
+def prep_args(args):
+    """
+    Build a list of per-run arg objects for existing run folders.
+    Expects subfolders named '001', '002', ... (zero-padded, all digits).
+    """
+    parent = args.data_path
+
+    # list only directories; accept only ASCII digits with one or more chars
+    run_names = [
+        name for name in os.listdir(parent)
+        if os.path.isdir(os.path.join(parent, name)) and re.fullmatch(r"[0-9]+", name)
+    ]
+
+    if not run_names:
+        # nothing to do
+        return []
+
+    # Convert to ints and sort
+    run_ids = sorted(int(n) for n in run_names)
+
+    res = []
+    for run_id in run_ids:
+        new_arg = deepcopy(args)  # args must be picklable
+        new_arg.run = f"{run_id:03d}"  # always 3-digit zero-padding
+        res.append(new_arg)
+
+    return res
 
 def multiprocess_data(args):
     """
-    - We will map a run for each data to a process, or as many runs as there are CPU cores.
-    - This function assumes that the data folder is the root for each date, and subfolders are names 
-    according to run id.
+    Process all existing run folders for a given date under args.data_path.
+    Spawns up to num_proc workers.
     """
+    # Decide worker count
+    if getattr(args, "max_processes", False):
+        # "use max" is all logical cores minus 1–2 for OS
+        num_proc = max(1, (cpu_count() or 1) - 2)
+    else:
+        num_proc = int(getattr(args, "num_processes", 1) or 1)
+        num_proc = max(1, num_proc)
 
+    args_list = prep_args(args)
+    if not args_list:
+        print("No numeric run folders found. Nothing to process.")
+        return []
+
+    # Don’t spawn more workers than tasks
+    num_proc = min(num_proc, len(args_list))
+
+    # Pool.map returns results in order; make sure process_data is top-level
+    with Pool(processes=num_proc) as pool:
+        results = pool.map(_process_wrapper, args_list, chunksize=1)
+
+    return results
+    
 
 
 if __name__ == "__main__":
@@ -380,11 +439,17 @@ if __name__ == "__main__":
         help="Date of the ride data to be processed. Must be one of the valid dates."
     )
     parser.add_argument(
-        "-run", type=str,
+        "--run", type=str, default="001",
         help="Run number to be processed."
     )
     parser.add_argument(
         "--multiprocess", default=False,
+    )
+    parser.add_argument(
+        "--num_processes", default=4,
+    )
+    parser.add_argument(
+        "--max_processes", default=False,
     )
     
     args = parser.parse_args()
