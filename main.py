@@ -27,6 +27,7 @@ from analysis.plotting import (
     plot_distributions,
     plot_cumulative_distribution
 )
+from analysis.reporting import export_run_report
 
 from data_class.ride_class import Ride, triaxial_metrics
 
@@ -205,9 +206,12 @@ def process_data(args):
             t_all = pd.to_timedelta(raw["4"]['Number'], unit='s')
         else:
             t_all = pd.to_timedelta(raw["1"]['Number'], unit='s')
+
         # Downsampled time vector to match 5s interval RAVE slices
         t_5s = t_all[4::5]
         t_5s_minutes = t_5s.dt.total_seconds() / 60
+        metrics_dict[str(triax)]["t_all_minutes"] = t_all.dt.total_seconds() / 60.0
+        metrics_dict[str(triax)]["t_5s_minutes"] = t_5s_minutes
         # 5s signals plot
         Cx, Cy, Cz = metrics_dict[str(triax)]["Cx"], metrics_dict[str(triax)]["Cy"], metrics_dict[str(triax)]["Cz"]
         plot_comfort_timeseries(t_5s_minutes, Cx, Cy, Cz, ride_obj, triax, save=True, save_dir=args.data_path)
@@ -357,8 +361,28 @@ def process_data(args):
         ]
         plot_ratio_comparison(t_all, ratios, labels=['X', 'Y', 'Z'], ride_obj=ride_obj, triax=triax, save=True, save_dir=args.data_path)
     
+
     ride_obj.metrics_dict = metrics_dict
     ride_obj.save_to_json(f"{data_path}/{ride_obj.ride_id}_ride_metrics.json")
+
+    date = ride_obj.date.split("-")
+    date = date[1] + "\\" + date[2] + "\\" + date[0]
+    
+
+    run_title = f"Clause 6 Summary — {ride_obj.ride_id}"
+
+    export_run_report(
+        output_pdf_path=os.path.join(args.data_path, f"{ride_obj.ride_id}_summary.pdf"),
+        run_title=run_title,
+        metrics_dict=metrics_dict,
+        categories_cont=cats_cont,
+        categories_mean=categories,
+        floor_triaxials=floor_triaxes,
+        seat_pairs=pairs,                     
+        rows_per_page=2,
+        ride_speed_mph=ride_obj.speed
+    )
+    print(f"Saved 2-page PDF: {os.path.join(args.data_path, f'{ride_obj.ride_id}_summary.pdf')}")
 
 
 def _process_wrapper(arg_obj):
@@ -371,23 +395,20 @@ def prep_args(args):
     """
     parent = args.data_path
 
-    # list only directories; accept only ASCII digits with one or more chars
     run_names = [
         name for name in os.listdir(parent)
         if os.path.isdir(os.path.join(parent, name)) and re.fullmatch(r"[0-9]+", name)
     ]
 
     if not run_names:
-        # nothing to do
         return []
 
-    # Convert to ints and sort
     run_ids = sorted(int(n) for n in run_names)
 
     res = []
     for run_id in run_ids:
-        new_arg = deepcopy(args)  # args must be picklable
-        new_arg.run = f"{run_id:03d}"  # always 3-digit zero-padding
+        new_arg = deepcopy(args)
+        new_arg.run = f"{run_id:03d}"
         res.append(new_arg)
 
     return res
@@ -410,7 +431,6 @@ def multiprocess_data(args):
         print("No numeric run folders found. Nothing to process.")
         return []
 
-    # Don’t spawn more workers than tasks
     num_proc = min(num_proc, len(args_list))
 
     # Pool.map returns results in order; make sure process_data is top-level
