@@ -7,7 +7,6 @@ VALID_DATES = ["5_29_2020", "5_22_2020", "5_30_2020", "5_24_2020"]
 
 
 def to_json_ready(obj):
-    # Pandas: encode with index so we can rebuild later
     if isinstance(obj, pd.Series):
         return {
             "__type__": "pd.Series",
@@ -16,28 +15,22 @@ def to_json_ready(obj):
             "dtype": str(obj.dtype),
             "name": obj.name,
         }
-    # (Optional) DataFrame support
     if isinstance(obj, pd.DataFrame):
         return {"__type__": "pd.DataFrame", "split": obj.to_dict(orient="split")}
-    # NumPy scalars/arrays -> Python lists/numbers
     if isinstance(obj, np.ndarray):
         return obj.tolist()
     if isinstance(obj, (np.integer, np.float64, np.bool_)):
         return obj.item()
-    # Containers
     if isinstance(obj, dict):
         return {k: to_json_ready(v) for k, v in obj.items()}
     if isinstance(obj, (list, tuple, set)):
         return [to_json_ready(v) for v in obj]
-    # Avoid your previous weakref crash
     if isinstance(obj, weakref.ReferenceType):
-        return None  # or str(obj)
+        return None  
 
-    # Custom objects
     if hasattr(obj, "__dict__"):
         return to_json_ready(vars(obj))
 
-    # Primitives passthrough
     return obj
 
 def from_json_ready(obj):
@@ -135,5 +128,5 @@ class Ride(RideMetaData):
             raw = json.load(f)
         data = from_json_ready(raw)
         inst = cls.__new__(cls)
-        inst.__dict__.update(data)  # or use a proper __init__
+        inst.__dict__.update(data)
         return inst
