@@ -171,7 +171,7 @@ def plot_comfort_timeseries(t_5s_minutes: pd.Series,
     ((0.2,0.3), 'Comfortable'),
     ((0.3,0.4), 'Medium'),
     ((0.4,1), 'Less Comfortable')
-]
+    ]
 
     for (lo, hi), label in cats_cont:
         plt.axhspan(lo, hi, color='gray', alpha=0.1)

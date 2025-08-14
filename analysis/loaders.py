@@ -74,7 +74,7 @@ def load_all_triax(dir_path: str, flip_x_y: bool=False) -> Tuple[dict, dict]:
                     RAVE_triax_data[triax][dim] = load_csv(data_path)
                 else:
                     triax_data[triax][dim] = load_csv(data_path)
-    # Ensure all triaxes have three dimensions
+    
     for triax in triax_data:
         if triax == "5":
             if len(triax_data[triax]["4"]) == 0:
