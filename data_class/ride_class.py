@@ -128,5 +128,5 @@ class Ride(RideMetaData):
             raw = json.load(f)
         data = from_json_ready(raw)
         inst = cls.__new__(cls)
-        inst.__dict__.update(data)  # or use a proper __init__
+        inst.__dict__.update(data)
         return inst
