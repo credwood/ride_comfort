@@ -1,20 +1,3 @@
-# -----------------------------------------------------------
-# PDF exporter with:
-#   • Per-triax pages: Continuous (Ccx/Ccy/Ccz @5s) + ISO (ax/ay/az/a_v @1s)
-#       - Continuous plots include comfort bands + labels
-#       - Legend pinned upper-left to avoid band labels
-#       - Tables have added spacing from titles
-#   • One Mean Summary page (NEW):
-#       - Left: Table of NMV / NVD / NVA per triax
-#       - Right: Two stacked plots
-#           · Top: NMV (Standard) — comfort lines + labels
-#           · Bottom: NVD/NVA (Complete) — comfort lines + labels
-#       - All content fits on a single page.
-#
-# export_run_report() ensures the output folder exists and adds .pdf if missing.
-# Returns the final path written.
-# -----------------------------------------------------------
-
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.pyplot as plt
 from matplotlib import gridspec
@@ -135,7 +118,7 @@ def _make_wide_table(ax, title, header, rows, font_size=8, bbox=(0.0, 0.0, 1.0, 
 # ---------------------------
 def _draw_cont_bands_with_labels(ax, t_vals, categories_cont):
     """
-    Draw shaded horizontal bands with centered labels (like your plot_comfort_timeseries).
+    Draw shaded horizontal bands with centered labels (like plot_comfort_timeseries).
     """
     if not categories_cont:
         return
@@ -212,7 +195,7 @@ def _draw_iso_on_ax(ax, ax_s, ay_s, az_s, av_s, ride_speed_mph: float):
 
 def _draw_mean_nmv_on_ax(ax, nmvs, categories_mean, floor_triaxials, ride_speed_mph: float):
     """
-    EXACTLY like your NMV plot:
+    EXACTLY like NMV plot:
       - floors at x=0.50 (marker 'x')
       - seats  at x=1.25 (marker 'o')
       - comfort bands as horizontal lines with labels at x=1.5
@@ -243,7 +226,7 @@ def _draw_mean_nmv_on_ax(ax, nmvs, categories_mean, floor_triaxials, ride_speed_
 
 def _draw_mean_nvd_nva_on_ax(ax, nvds, nvaz, categories_mean, pair_dict, ride_speed_mph: float):
     """
-    EXACTLY like your NVD/NVA plot:
+    EXACTLY like NVD/NVA plot:
       - NVD (floors) at x=0.50 marker 'x'
       - NVA (seats)  at x=1.25 marker 'o' with orientation in label
       - comfort bands as horizontal lines with labels at x=1.5
@@ -323,21 +306,54 @@ def _render_triax_row(fig, gs_row, triax_id, md, categories_cont, ride_speed_mph
 # ---------------------------
 # Mean Summary Page (table + two plots on one page)
 # ---------------------------
-def _render_mean_summary_page(pdf, run_title, nmvs, nvds, nvaz, categories_mean, floor_triaxials, seat_pairs, ride_speed_mph):
-    """
-    Builds a single page with:
-      - Left column: table of NMV / NVD / NVA per triax
-      - Right column (stacked): NMV plot (top), NVD/NVA plot (bottom)
-    """
+def _render_mean_summary_page(
+    pdf,
+    run_title,
+    nmvs,
+    nvds,
+    nvaz,
+    categories_mean,
+    floor_triaxials,
+    seat_pairs,
+    ride_speed_mph
+):
+
     fig = plt.figure(figsize=(11, 8.5))
     fig.suptitle("Mean Comfort Summary — " + run_title, fontsize=12, fontweight="semibold")
-    gs = gridspec.GridSpec(2, 2, figure=fig, width_ratios=[1.1, 1.3], height_ratios=[1, 1], wspace=0.20, hspace=0.28)
 
-    # ---- Left: Wide table spanning both rows in col 0 ----
-    ax_table = fig.add_subplot(gs[:, 0])
+    # 2 rows x 2 cols; top row gets more height for large graphs
+    gs = gridspec.GridSpec(
+        2, 2, figure=fig,
+        width_ratios=[1, 1],
+        height_ratios=[1.8, 1.0],   # top ≈ 64% / bottom ≈ 36%
+        wspace=0.20, hspace=0.28
+    )
+
+    # ---- Top-left: NMV (Standard) large plot ----
+    ax_nmv = fig.add_subplot(gs[0, 0])
+    _draw_mean_nmv_on_ax(
+        ax=ax_nmv,
+        nmvs=nmvs,
+        categories_mean=categories_mean,
+        floor_triaxials=floor_triaxials,
+        ride_speed_mph=ride_speed_mph
+    )
+
+    # ---- Top-right: NVD/NVA (Complete) large plot ----
+    ax_nvdnva = fig.add_subplot(gs[0, 1])
+    _draw_mean_nvd_nva_on_ax(
+        ax=ax_nvdnva,
+        nvds=nvds,
+        nvaz=nvaz,
+        categories_mean=categories_mean,
+        pair_dict=seat_pairs or [],
+        ride_speed_mph=ride_speed_mph
+    )
+
+    # ---- Bottom: Wide compact table spanning both columns ----
+    ax_table = fig.add_subplot(gs[1, :])
 
     # Build table rows: Triax | NMV | NVD | NVA
-    # Use union of triaxes inferred from provided lists
     tr_set = set([t for t, _ in nmvs]) | set([t for t, _ in nvds]) | set([t for t, _ in nvaz])
     tr_list = sorted(tr_set)
 
@@ -348,25 +364,19 @@ def _render_mean_summary_page(pdf, run_title, nmvs, nvds, nvaz, categories_mean,
         nva = next((v for (tt, v) in nvaz if tt == t), None)
         rows.append([f"T{t}", _safe_val(nmv), _safe_val(nvd), _safe_val(nva)])
 
+    # Slightly smaller bbox height so title doesn't crowd table
     _make_wide_table(
         ax_table,
         title="Per-Triax Mean Comfort Metrics",
         header=["Triax", "NMV", "NVD", "NVA"],
         rows=rows,
         font_size=8,
-        bbox=(0.0, 0.0, 1.0, 0.90)
+        bbox=(0.0, 0.02, 1.0, 0.82)   # lower + shorter table -> more whitespace, less overlap
     )
-
-    # ---- Right-Top: NMV plot ----
-    ax_nmv = fig.add_subplot(gs[0, 1])
-    _draw_mean_nmv_on_ax(ax_nmv, nmvs, categories_mean, floor_triaxials, ride_speed_mph)
-
-    # ---- Right-Bottom: NVD/NVA plot ----
-    ax_nvdnva = fig.add_subplot(gs[1, 1])
-    _draw_mean_nvd_nva_on_ax(ax_nvdnva, nvds, nvaz, categories_mean, seat_pairs, ride_speed_mph)
 
     pdf.savefig(fig, bbox_inches="tight")
     plt.close(fig)
+
 
 # ---------------------------
 # Pagination helper
@@ -407,7 +417,7 @@ def export_run_report(
       ride_speed_mph: numeric, used in titles
 
     Layout:
-      • Pages 1..N: rows of triaxes (Continuous + ISO)
+      • Pages 1..N: rows of triaxes
       • Final page: Mean Summary — table + two stacked plots (NMV and NVD/NVA)
     """
     safe_pdf_path = _prepare_output_path(output_pdf_path)
@@ -427,7 +437,6 @@ def export_run_report(
         nvaz.append((tr, md.get("N_VA")))  # may be None for floors
 
     with PdfPages(safe_pdf_path) as pdf:
-        # ---- Per-triax pages (Continuous + ISO) ----
         for page_trs in _chunk(triaxes, rows_per_page):
             fig = plt.figure(figsize=(11, 8.5), constrained_layout=True)  # landscape
             fig.suptitle(run_title, fontsize=12, fontweight="semibold")

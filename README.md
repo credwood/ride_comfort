@@ -34,6 +34,24 @@ pip install -r requirements.txt
 
 ---
 
+## Using the `main.py` Script
+
+This is a multiprocessing script, designed to execute all runs concurrently (or as many CPU cores you choose to dedicate to the task). This script can be run as a single process; in this case simply pass the data folder path, the date and the run ID as arguments. 
+
+Any date passed to the program must be one of the following `VALID_DATES`, in exactly the same format: 
+```VALID_DATES = ["5_29_2020", "5_22_2020", "5_30_2020", "5_24_2020"]```
+
+Requirements for running script with multiple processes:
+ 1. To execute all runs at once, all CSVs for a given run should be subfolders in the root folder passed to `data_path`, labeled with their run ID, e.d. `001`, `002`, etc.
+ 2. set `multiprocess` to `True`
+ 3. To use all availible CPU cores (save for 2, or 1 if you only have 2), set `max_processes` to `True`. OR use `num_processes` to set the maximum number of cores dedicated to this task.
+ 4. Pass the date to be executed to `date`. Note above the valid dates.
+
+All output will be saved in their respective `data_path\{run_id}` subfolders. This includes:
+1. All graphs generated during the script execution, listed below.
+2. A JSON with all metadata from the day, for the specific run, and all calculations and time series specified in the metrics matrix document.
+3. A summary PDF of plots and tables specified in the metrics matrix doc.
+
 ## What `calculations.ipynb` Does
 
 1. **Loads Data**
