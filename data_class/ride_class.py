@@ -102,12 +102,15 @@ class RideMetaData:
     def __repr__(self):
         return f"RideMetaData(ride_id={self.ride_id}, date={self.date})"
     
+    def to_dict(self):
+        return dict(self.__dict__)
+
     def to_json(self):
-        return json.dumps(self, default=lambda o: getattr(o, '__dict__', str(o)))
-    
+        return json.dumps(self.to_dict(), indent=4)
+
     def save_to_json(self, file_path: str):
-        with open(file_path, 'w') as file:
-            json.dump(self.to_json(), file, indent=4)
+        with open(file_path, 'w') as f:
+            json.dump(self.to_dict(), f, indent=4)
 
 
 class Ride(RideMetaData):
